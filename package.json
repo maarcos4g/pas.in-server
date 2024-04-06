@@ -9,7 +9,7 @@
     "start": "node dist/http/server.mjs",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "vercel-build": "npx prisma migrate deploy"
+    "vercel-build": "npx prisma migrate deploy && prisma generate && tsup src --format esm"
   },
   "keywords": [],
   "author": "",
