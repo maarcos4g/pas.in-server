@@ -8,7 +8,8 @@
     "build": "tsup src --format esm",
     "start": "node dist/http/server.mjs",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "vercel-build": "npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
