@@ -22,11 +22,12 @@ export async function getEventAttendees(app: FastifyInstance) {
           200: z.object({
             attendees: z.array(
               z.object({
-                id: z.number(),
+                id: z.string().uuid(),
                 name: z.string(),
                 email: z.string().email(),
                 createdAt: z.date(),
                 checkedInAt: z.date().nullable(),
+                ticketId: z.string().uuid()
               })
             ),
             total: z.number()
@@ -57,6 +58,7 @@ export async function getEventAttendees(app: FastifyInstance) {
             name: true,
             email: true,
             createdAt: true,
+            ticketId: true,
             checkIn: {
               select: {
                 createdAt: true
@@ -84,7 +86,8 @@ export async function getEventAttendees(app: FastifyInstance) {
             name: attendee.name,
             email: attendee.email,
             createdAt: attendee.createdAt,
-            checkedInAt: attendee.checkIn?.createdAt ?? null
+            checkedInAt: attendee.checkIn?.createdAt ?? null,
+            ticketId: attendee.ticketId,
           }
         }),
         total

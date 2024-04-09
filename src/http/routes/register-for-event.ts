@@ -1,6 +1,8 @@
 import { FastifyInstance } from "fastify";
 import { ZodTypeProvider } from "fastify-type-provider-zod"
 
+import { customAlphabet, nanoid } from 'nanoid'
+
 import z from "zod";
 import { db } from "../../db/connection";
 import { BadRequest } from "./_errors/bad-request";
@@ -21,7 +23,7 @@ export async function registerForEvent(app: FastifyInstance) {
         }),
         response: {
           201: z.object({
-            attendeeId: z.number()
+            attendeeId: z.string().uuid()
           })
         }
       }
@@ -60,11 +62,15 @@ export async function registerForEvent(app: FastifyInstance) {
         throw new BadRequest('The maximum number of attendees for this event has been reached.')
       }
 
+      const nanoId = customAlphabet('1234567890abcdef', 10)
+      const ticketId = nanoId(6).toUpperCase()
+
       const attendee = await db.attendee.create({
         data: {
           name,
           email,
           eventId,
+          ticketId
         }
       })
 
