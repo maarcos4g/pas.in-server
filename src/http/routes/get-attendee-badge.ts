@@ -13,7 +13,7 @@ export async function getAttendeeBadge(app: FastifyInstance) {
         summary: 'Get an attendee badge',
         tags: ['attendees'],
         params: z.object({
-          attendeeId: z.string().uuid(), //converter string em number
+          ticketId: z.string(), //converter string em number
         }),
         response: {
           200: z.object({
@@ -27,11 +27,11 @@ export async function getAttendeeBadge(app: FastifyInstance) {
         }
       }
     }, async ({ params, url, protocol, hostname }, reply) => {
-      const { attendeeId } = params
+      const { ticketId } = params
 
       const attendee = await db.attendee.findUnique({
         where: {
-          id: attendeeId,
+          ticketId
         },
         select: {
           name: true,
@@ -52,7 +52,7 @@ export async function getAttendeeBadge(app: FastifyInstance) {
 
       console.log(baseURL)
 
-      const checkInURL = new URL(`/attendees/${attendeeId}/check-in`, baseURL)
+      const checkInURL = new URL(`/attendees/${ticketId}/check-in`, baseURL)
 
       return reply.send({
         badge: {
