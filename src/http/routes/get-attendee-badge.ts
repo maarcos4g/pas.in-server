@@ -18,10 +18,12 @@ export async function getAttendeeBadge(app: FastifyInstance) {
         response: {
           200: z.object({
             badge: z.object({
+              attendeeId: z.string().uuid(),
               name: z.string(),
               email: z.string().email(),
               eventTitle: z.string(),
               checkInURL: z.string().url(),
+              ticketId: z.string(),
             })
           })
         }
@@ -34,13 +36,15 @@ export async function getAttendeeBadge(app: FastifyInstance) {
           ticketId
         },
         select: {
+          id: true,
           name: true,
           email: true,
           event: {
             select: {
               title: true,
             }
-          }
+          },
+          ticketId: true
         }
       })
 
@@ -56,10 +60,12 @@ export async function getAttendeeBadge(app: FastifyInstance) {
 
       return reply.send({
         badge: {
+          attendeeId: attendee.id,
           name: attendee.name,
           email: attendee.email,
           eventTitle: attendee.event.title,
-          checkInURL: checkInURL.toString()
+          checkInURL: checkInURL.toString(),
+          ticketId: attendee.ticketId,
         }
       })
 
