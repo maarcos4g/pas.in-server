@@ -8,12 +8,12 @@ import { BadRequest } from "./_errors/bad-request";
 export async function getAttendeeBadge(app: FastifyInstance) {
   app
     .withTypeProvider<ZodTypeProvider>()
-    .get('/attendees/:attendeeId/badge', {
+    .get('/attendees/:ticketId/badge', {
       schema: {
         summary: 'Get an attendee badge',
         tags: ['attendees'],
         params: z.object({
-          ticketId: z.string(), //converter string em number
+          ticketId: z.string(),
         }),
         response: {
           200: z.object({
