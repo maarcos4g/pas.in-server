@@ -13,7 +13,7 @@ export async function getAttendeeBadge(app: FastifyInstance) {
         summary: 'Get an attendee badge',
         tags: ['attendees'],
         params: z.object({
-          attendeeId: z.coerce.number().int(), //converter string em number
+          attendeeId: z.string().uuid(), //converter string em number
         }),
         response: {
           200: z.object({

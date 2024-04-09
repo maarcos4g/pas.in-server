@@ -27,7 +27,7 @@ export async function getEventAttendees(app: FastifyInstance) {
                 email: z.string().email(),
                 createdAt: z.date(),
                 checkedInAt: z.date().nullable(),
-                ticketId: z.string().uuid()
+                ticketId: z.string()
               })
             ),
             total: z.number()

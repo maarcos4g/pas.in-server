@@ -13,7 +13,7 @@ export async function checkIn(app: FastifyInstance) {
         summary: 'Check-in an attendee',
         tags: ['check-ins'],
         params: z.object({
-          attendeeId: z.coerce.number().int()
+          attendeeId: z.string().uuid()
         }),
         response: {
           201: z.null()
