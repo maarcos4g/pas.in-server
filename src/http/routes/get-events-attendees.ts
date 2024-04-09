@@ -28,7 +28,8 @@ export async function getEventAttendees(app: FastifyInstance) {
                 createdAt: z.date(),
                 checkedInAt: z.date().nullable(),
               })
-            )
+            ),
+            total: z.number()
           })
         }
       }
@@ -36,32 +37,45 @@ export async function getEventAttendees(app: FastifyInstance) {
       const { eventId } = params
       const { pageIndex, query: searchQuery } = query
 
-      const attendees = await db.attendee.findMany({
-        where: searchQuery ? {
-          eventId,
-          name: {
-            contains: searchQuery
-          }
-        } : {
-          eventId,
-        },
-        take: 10,
-        skip: pageIndex * 10,
-        orderBy: {
-          createdAt: 'desc'
-        },
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          createdAt: true,
-          checkIn: {
-            select: {
-              createdAt: true
+      const [attendees, total] = await Promise.all([
+        db.attendee.findMany({
+          where: searchQuery ? {
+            eventId,
+            name: {
+              contains: searchQuery
+            }
+          } : {
+            eventId,
+          },
+          take: 10,
+          skip: pageIndex * 10,
+          orderBy: {
+            createdAt: 'desc'
+          },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            createdAt: true,
+            checkIn: {
+              select: {
+                createdAt: true
+              }
             }
           }
-        }
-      })
+        }),
+
+        db.attendee.count({
+          where: searchQuery ? {
+            eventId,
+            name: {
+              contains: searchQuery,
+            }
+          } : {
+            eventId,
+          },
+        })
+      ])
 
       return reply.send({
         attendees: attendees.map(attendee => {
@@ -72,8 +86,8 @@ export async function getEventAttendees(app: FastifyInstance) {
             createdAt: attendee.createdAt,
             checkedInAt: attendee.checkIn?.createdAt ?? null
           }
-        })
+        }),
+        total
       })
-
     })
 }
