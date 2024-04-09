@@ -23,7 +23,7 @@ export async function registerForEvent(app: FastifyInstance) {
         }),
         response: {
           201: z.object({
-            attendeeId: z.string().uuid()
+            ticketId: z.string()
           })
         }
       }
@@ -74,6 +74,6 @@ export async function registerForEvent(app: FastifyInstance) {
         }
       })
 
-      return reply.status(201).send({ attendeeId: attendee.id })
+      return reply.status(201).send({ ticketId: attendee.ticketId })
     })
 }
